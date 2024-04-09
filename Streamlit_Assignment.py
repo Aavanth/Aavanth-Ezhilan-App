@@ -38,7 +38,7 @@ selected_sub_categories = st.multiselect("Select Sub_Categories", sub_categories
 
 selected_category_df = df[df['Category']==selected_category]
 
-if sub_category_option:
+if selected_sub_categories:
     selected_sub_category_df = selected_category_df[selected_category_df['Sub_Category'].isin(sub_category_option)]
 
     sub_category_sales_by_month = selected_sub_category_df.filter(items=['Sales','Sub_Category'])
