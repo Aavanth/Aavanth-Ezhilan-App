@@ -43,15 +43,15 @@ if not filtered_df.empty:
     st.title(f"Line Chart of Selected Subcategories Over Time")
     st.write(f"Showing line chart for selected subcategories over time for selected Category '{selected_category}'.")
     
-    # Check if 'Date' column exists in filtered_df
-    if 'Date' in filtered_df.columns:
+    # Check if 'Order_Date' column exists in filtered_df
+    if 'Order_Date' in filtered_df.columns:
         # Plot line chart for each selected subcategory
         fig, ax = plt.subplots()
         for sub_category in selected_sub_categories:
             sub_df = filtered_df[filtered_df["Sub_Category"] == sub_category]
-            ax.plot(sub_df['Date'], sub_df['Value'], label=sub_category)
-        ax.set_xlabel('Date')
-        ax.set_ylabel('Value')
+            ax.plot(sub_df['Order_Date'], sub_df['Sales'], label=sub_category)
+        ax.set_xlabel('Order_Date')
+        ax.set_ylabel('Sales')
         ax.legend()
         st.pyplot(fig)
     else:
