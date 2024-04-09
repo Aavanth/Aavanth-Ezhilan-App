@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
+import plotly.graph_objects as go
 import math
 
 st.title("Aavanth Ezhilan Data App Assignment")
@@ -36,28 +36,36 @@ selected_category = st.selectbox("Select a Category", df["Category"].unique())
 sub_categories = df[df["Category"] == selected_category]["Sub_Category"].unique()
 selected_sub_categories = st.multiselect("Select Sub_Categories", sub_categories)
 
-# Filter data based on selected Category and Sub_Category
-filtered_df = df[(df["Category"] == selected_category) & (df["Sub_Category"].isin(selected_sub_categories))]
+selected_category_df = df[df['Category']==selected_category]
 
-if not filtered_df.empty:
-    st.title(f"Line Chart for Selected Subcategories")
-    fig, ax = plt.subplots()
-    for sub_category in selected_sub_categories:
-        sub_df = filtered_df[filtered_df["Sub_Category"] == sub_category]
-        # Convert 'Order_Date' to datetime if it exists in sub_df
-        if 'Order_Date' in sub_df.columns:
-            sub_df["Order_Date"] = pd.to_datetime(sub_df["Order_Date"])
-            sub_df.set_index('Order_Date', inplace=True)  # Set 'Order_Date' as index
-            sales_by_month = sub_df.filter(items=['Sales']).groupby(pd.Grouper(freq='M')).sum()
-            ax.plot(sales_by_month.index, sales_by_month["Sales"], label=sub_category)
-        else:
-            st.warning(f"Column 'Order_Date' not found in data for Sub_Category '{sub_category}'")
-    ax.set_xlabel('Date')
-    ax.set_ylabel('Sales')
-    ax.legend()
-    st.pyplot(fig)
-else:
-    st.write("No data available for the selected subcategories.")
+if sub_category_option:
+    selected_sub_category_df = selected_category_df[selected_category_df['Sub_Category'].isin(sub_category_option)]
+
+    sub_category_sales_by_month = selected_sub_category_df.filter(items=['Sales','Sub_Category'])
+    
+    sub_category_sales_by_month = selected_sub_category_df.groupby('Sub_Category').resample('ME').sum()
+
+    sub_category_sales_by_month = sub_category_sales_by_month[['Sales','Profit','Discount']]
+
+    sub_category_sales_by_month.reset_index(inplace=True)
+
+    traces = []
+    for sub_category in sub_category_sales_by_month['Sub_Category'].unique():
+        sub_category_df = sub_category_sales_by_month[sub_category_sales_by_month['Sub_Category'] == sub_category]
+        trace = go.Scatter(x=sub_category_df['Order_Date'], y=sub_category_df['Sales'], mode='lines', name=sub_category)
+        traces.append(trace)
+
+    # Create the figure
+    fig = go.Figure(data=traces)
+
+    # Add title and labels
+    fig.update_layout(title='Monthly Sales by selected Subcategory',
+                      xaxis_title='Month',
+                      yaxis_title='Sales')
+
+
+    # Display Plotly chart in Streamlit
+    st.plotly_chart(fig)
     
 # Metrics for selected items
 total_sales = filtered_df["Sales"].sum()
