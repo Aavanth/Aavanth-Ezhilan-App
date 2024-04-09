@@ -67,15 +67,15 @@ if selected_sub_categories:
     # Display Plotly chart in Streamlit
     st.plotly_chart(fig)
     
-# Metrics for selected items
-total_sales = sub_category_sales_by_month['Sales'].sum()
-total_profit = sub_category_sales_by_month['Profit'].sum()
-overall_avg_profit_margin = (total_profit / total_sales) * 100
+    # Metrics for selected items
+    total_sales = sub_category_sales_by_month['Sales'].sum()
+    total_profit = sub_category_sales_by_month['Profit'].sum()
+    overall_avg_profit_margin = (total_profit / total_sales) * 100
 
-# Calculate overall average profit margin
-overall_avg_profit_margin_all = (df["Profit"].sum() / df["Sales"].sum()) * 100
+    # Calculate overall average profit margin
+    overall_avg_profit_margin_all = (df["Profit"].sum() / df["Sales"].sum()) * 100
 
-# Display metrics
-st.metric("Total Sales", total_sales)
-st.metric("Total Profit", total_profit)
-st.metric("Overall Profit Margin (%)", overall_avg_profit_margin, delta=overall_avg_profit_margin - overall_avg_profit_margin_all)
+    # Display metrics
+    st.metric("Total Sales", total_sales)
+    st.metric("Total Profit", total_profit)
+    st.metric("Overall Profit Margin (%)", overall_avg_profit_margin, delta=overall_avg_profit_margin - overall_avg_profit_margin_all)
