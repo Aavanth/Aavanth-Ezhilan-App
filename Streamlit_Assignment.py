@@ -40,11 +40,18 @@ selected_sub_categories = st.multiselect("Select Sub_Categories", sub_categories
 filtered_df = df[(df["Category"] == selected_category) & (df["Sub_Category"].isin(selected_sub_categories))]
 
 # Line chart of sales for selected items
-if not filtered_df.empty and 'sales_by_month' in filtered_df.columns:
-    sales_over_time = filtered_df['sales_by_month']
-    st.line_chart(sales_over_time, use_container_width=True)
-else:
-    st.write("No data available or incorrect data format for plotting sales over time.")
+selected_column = st.selectbox("Select a column", df.columns)
+filtered_df = df[df["Category"] == selected_category]  # Assuming "Category" is a column in your DataFrame
+
+st.title(f"Line Chart of {selected_column} Over Time")
+st.write(f"Showing line chart for '{selected_column}' over time for selected Category '{selected_category}'.")
+    
+# Plot line chart
+fig, ax = plt.subplots()
+ax.plot(filtered_df['Date'], filtered_df[selected_column])
+ax.set_xlabel('Date')
+ax.set_ylabel(selected_column)
+st.pyplot(fig)
 
 # Metrics for selected items
 total_sales = filtered_df["Sales"].sum()
