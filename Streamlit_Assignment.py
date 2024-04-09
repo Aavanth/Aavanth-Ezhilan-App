@@ -39,21 +39,21 @@ selected_sub_categories = st.multiselect("Select Sub_Categories", sub_categories
 # Filter data based on selected Category and Sub_Category
 filtered_df = df[(df["Category"] == selected_category) & (df["Sub_Category"].isin(selected_sub_categories))]
 
-st.title(f"Line Chart of Selected Subcategories Over Time")
-st.write(f"Showing line chart for selected subcategories over time for selected Category '{selected_category}'.")
-    
-# Plot line chart for each selected subcategory
-st.title(f"Line Chart for Selected Subcategories")
-fig, ax = plt.subplots()
-for sub_category in selected_sub_categories:
-    sub_df = filtered_df[filtered_df["Sub_Category"] == sub_category]
-    sub_df["Order_Date"] = pd.to_datetime(sub_df["Order_Date"])
-    sub_df.set_index('Order_Date', inplace=True)
-    ax.plot(sub_df["Order_Date"], sub_df["Sales"], label=sub_category)
-ax.set_xlabel('Order_Date')
-ax.set_ylabel('Sales')
-ax.legend()
-st.pyplot(fig)
+if not filtered_df.empty:
+    st.title(f"Line Chart for Selected Subcategories")
+    fig, ax = plt.subplots()
+    for sub_category in selected_sub_categories:
+        sub_df = filtered_df[filtered_df["Sub_Category"] == sub_category]
+        sub_df["Order_Date"] = pd.to_datetime(sub_df["Order_Date"])  # Convert 'Order_Date' to datetime
+        sub_df.set_index('Order_Date', inplace=True)  # Set 'Order_Date' as index
+        sales_by_month = sub_df.filter(items=['Sales']).groupby(pd.Grouper(freq='M')).sum()
+        ax.plot(sales_by_month.index, sales_by_month["Sales"], label=sub_category)
+    ax.set_xlabel('Date')
+    ax.set_ylabel('Sales')
+    ax.legend()
+    st.pyplot(fig)
+else:
+    st.write("No data available for the selected subcategories.")
 
 # Metrics for selected items
 total_sales = filtered_df["Sales"].sum()
