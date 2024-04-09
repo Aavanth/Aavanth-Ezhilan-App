@@ -68,8 +68,8 @@ if selected_sub_categories:
     st.plotly_chart(fig)
     
 # Metrics for selected items
-total_sales = filtered_df["Sales"].sum()
-total_profit = filtered_df["Profit"].sum()
+total_sales = sub_category_sales_by_month['Sales'].sum()
+total_profit = sub_category_sales_by_month['Profit'].sum()
 overall_avg_profit_margin = (total_profit / total_sales) * 100
 
 # Calculate overall average profit margin
