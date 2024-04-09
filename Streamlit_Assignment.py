@@ -47,8 +47,10 @@ st.title(f"Line Chart for Selected Subcategories")
 fig, ax = plt.subplots()
 for sub_category in selected_sub_categories:
     sub_df = filtered_df[filtered_df["Sub_Category"] == sub_category]
-    ax.plot(sub_df["Date"], sub_df["Sales"], label=sub_category)
-ax.set_xlabel('Date')
+    sub_df["Order_Date"] = pd.to_datetime(sub_df["Order_Date"])
+    sub_df.set_index('Order_Date', inplace=True)
+    ax.plot(sub_df["Order_Date"], sub_df["Sales"], label=sub_category)
+ax.set_xlabel('Order_Date')
 ax.set_ylabel('Sales')
 ax.legend()
 st.pyplot(fig)
