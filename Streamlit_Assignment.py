@@ -39,25 +39,19 @@ selected_sub_categories = st.multiselect("Select Sub_Categories", sub_categories
 # Filter data based on selected Category and Sub_Category
 filtered_df = df[(df["Category"] == selected_category) & (df["Sub_Category"].isin(selected_sub_categories))]
 
-if not filtered_df.empty:
-    st.title(f"Line Chart of Selected Subcategories Over Time")
-    st.write(f"Showing line chart for selected subcategories over time for selected Category '{selected_category}'.")
+st.title(f"Line Chart of Selected Subcategories Over Time")
+st.write(f"Showing line chart for selected subcategories over time for selected Category '{selected_category}'.")
     
-    # Check if 'Order_Date' column exists in filtered_df
-    if 'Order_Date' in filtered_df.columns:
-        # Plot line chart for each selected subcategory
-        fig, ax = plt.subplots()
-        for sub_category in selected_sub_categories:
-            sub_df = filtered_df[filtered_df["Sub_Category"] == sub_category]
-            ax.plot(sub_df['Order_Date'], sub_df['Sales'], label=sub_category)
-        ax.set_xlabel('Order_Date')
-        ax.set_ylabel('Sales')
-        ax.legend()
-        st.pyplot(fig)
-    else:
-        st.write("No 'Date' column found in the selected data.")
-else:
-    st.write("No data available or incorrect data format for plotting the line chart.")
+# Plot line chart for each selected subcategory
+st.title(f"Line Chart for Selected Subcategories")
+fig, ax = plt.subplots()
+for sub_category in selected_sub_categories:
+    sub_df = filtered_df[filtered_df["Sub_Category"] == sub_category]
+    ax.plot(sub_df["Date"], sub_df["Sales"], label=sub_category)
+ax.set_xlabel('Date')
+ax.set_ylabel('Sales')
+ax.legend()
+st.pyplot(fig)
 
 # Metrics for selected items
 total_sales = filtered_df["Sales"].sum()
